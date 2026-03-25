@@ -1,0 +1,12 @@
+node_modules
+dist/
+build/
+artifacts/
+
+# IDE / editor
+.cursor/
+.claude/
+*.swp
+*.swo
+.DS_Store
+
