@@ -10,7 +10,7 @@ let _isDemo: boolean | null = null;
 async function isDemo(): Promise<boolean> {
   if (_isDemo !== null) return _isDemo;
   try {
-    const res = await fetch("/api/wadms", { method: "GET" });
+    const res = await fetch("/api/password", { method: "GET" });
     const contentType = res.headers.get("content-type") || "";
     // If the response is HTML (SPA fallback) or 404, there's no real API server
     _isDemo = !res.ok || !contentType.includes("application/json");
@@ -42,4 +42,8 @@ export async function deleteWadm(id: string) {
 
 export function isDemoMode() {
   return _isDemo === true;
+}
+
+export async function detectMode(): Promise<boolean> {
+  return isDemo();
 }

@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { WadmList } from "./components/WadmList";
 import { WadmEditor } from "./components/WadmEditor";
+import { PasswordPrompt } from "./components/PasswordPrompt";
 import { useRoute } from "./hooks/useRoute";
+import { isDemoMode, detectMode } from "./api-switch";
 import "./index.css";
 
 // Clear demo data on fresh page load (spec: data deleted on refresh)
@@ -50,6 +52,13 @@ function ThemeToggle() {
 
 export function App() {
   const { route, navigate } = useRoute();
+  const [unlocked, setUnlocked] = useState(false);
+  const [modeDetected, setModeDetected] = useState(false);
+
+  // Detect if we're in demo mode (no server)
+  useEffect(() => {
+    detectMode().then(() => setModeDetected(true));
+  }, []);
 
   // Warn before refresh — demo data is lost on reload
   useEffect(() => {
@@ -62,10 +71,17 @@ export function App() {
     return () => window.removeEventListener("beforeunload", handler);
   }, []);
 
+  if (!modeDetected) return null;
+
+  // Skip password prompt in demo mode (Vercel static deploy)
+  const showPasswordPrompt = !unlocked && !isDemoMode();
+
   return (
     <TooltipProvider delayDuration={300}>
       <ThemeToggle />
-      {route.page === "list" ? (
+      {showPasswordPrompt ? (
+        <PasswordPrompt onUnlocked={() => setUnlocked(true)} />
+      ) : route.page === "list" ? (
         <WadmList
           onNavigate={(id) => navigate({ page: "edit", id })}
         />
