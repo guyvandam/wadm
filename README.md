@@ -1,5 +1,9 @@
 # WADM - Weighted Average Decision Matrix
 
+https://usewadm.vercel.app/
+
+---
+
 A macOS desktop app for structured decision-making. Define your options, set weighted criteria, score each option, and let the math guide your choice.
 
 <p align="center">
